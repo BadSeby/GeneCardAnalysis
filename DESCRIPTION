@@ -1,0 +1,51 @@
+Package: GeneCardAnalysis
+Title: Interactive RT-qPCR Data Analysis and Visualisation
+Version: 0.1.0
+Authors@R: c(
+    person("Sebastiano", "Di Bella", role = c("aut", "cre"),
+           email = "sebastiano.dibella@unipa.it",
+           comment = c(ORCID = "0000-0001-7161-303X")),
+    person("Francesco", "Orilio", role = "aut",
+		email = "francesco.orilio@unipa.it")
+  )
+Description: A Shiny web application for reproducible analysis and visualisation
+    of RT-qPCR data. Implements the delta-CT normalisation method
+    (Livak & Schmittgen, 2001 <doi:10.1006/meth.2001.1262>) to compute
+    normalised expression values (2^(-deltaCT)), log2 fold-changes relative
+    to a user-defined reference condition, and per-gene z-scores on the log2
+    scale. Results are visualised as publication-ready heatmaps (via
+    ComplexHeatmap) and ranked bar charts. Interactive controls allow the user
+    to configure clustering, column ordering, and colour palettes. Experimental
+    comparisons are defined via a YAML configuration file or through an in-app
+    form. All outputs can be exported as PNG, PDF, Excel, and ZIP archives.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Depends:
+    R (>= 4.1.0),
+    shiny (>= 1.7.0)
+Imports:
+    bslib (>= 0.5.0),
+    ComplexHeatmap (>= 2.12.0),
+    circlize,
+    readxl,
+    dplyr,
+    tidyr,
+    tibble,
+    ggplot2,
+    grid,
+    glue,
+    writexl,
+    showtext,
+    yaml,
+    DT,
+    colourpicker,
+    gtools
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+URL: https://github.com/StassiLab/GeneCardAnalysis
+BugReports: https://github.com/StassiLab/GeneCardAnalysis/issues

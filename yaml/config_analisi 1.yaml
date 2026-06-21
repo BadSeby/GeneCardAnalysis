@@ -1,0 +1,43 @@
+# ############################################
+# Bioinformtic Section
+# ############################################
+author: "SDB"
+
+
+# ############################################
+# Biologist Section
+# ############################################
+project_name: "CD93 PROJECT"
+input_file: "8 x seb_mod.csv"
+
+# Impostazioni Globali
+global_settings:
+  housekeeping_genes: ["GAPDH", "HPRT1", "RPL13", "RPL7"]
+  undetermined_value: 40
+  exclude_genes: ["RT", "gDNA"] # Geni da ignorare sempre
+
+# Definizione dei Confronti
+comparisons:
+  - name: "all_Analysis"
+    reference: "#8 EV PLV UT"
+    samples: "all" 
+    signature_type: "all"
+    cluster_heatmap: false   # true = clusterizza righe e colonne
+    
+  - name: "Emt_"
+    reference: "UT"
+    samples: ["#8 EV PLV UT", "#8 OE CD93"]
+    signature_type: "signature_emt"
+    cluster_heatmap: false   # true = clusterizza righe e colonne
+
+  - name: "Metastasis_"
+    reference: "UT"
+    samples: ["#8 EV PLV UT", "#8 OE CD93"]
+    signature_type: "signature_emt"
+    cluster_heatmap: false   # true = clusterizza righe e colonne
+
+  - name: "Metabolism_"
+    reference: "UT"
+    samples: ["#8 EV PLV UT", "#8 OE CD93"]
+    signature_type: "signature_emt"
+    cluster_heatmap: false   # true = clusterizza righe e colonne

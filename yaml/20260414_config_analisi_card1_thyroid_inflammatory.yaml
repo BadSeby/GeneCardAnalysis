@@ -1,0 +1,34 @@
+# ############################################
+# Bioinformtic Section
+# ############################################
+author: "SDB" # SDB, FO, RNB
+
+
+# ############################################
+# Biologist Section
+# ############################################
+project_name: "INFLAMMATORY_CARD_THYROID_MAY2026"
+input_file: "20260414_thyroid_card1_inflammatory_tab.csv"
+
+# Impostazioni Globali
+global_settings:
+  housekeeping_genes: ["GAPDH", "HPRT1", "GUSB", "RPLP0", "TBP", "ACTB", "B2M"]
+  undetermined_value: 40
+  exclude_genes: ["RT", "gDNA", "PCR", "RQ1", "RQ2"] # Geni da ignorare sempre
+
+# Definizione dei Confronti
+comparisons:
+  - name: "all_Analysis_CARD1"
+    reference: "8505 ut"
+    samples: "all" 
+    signature_type: "all"
+    
+  - name: "Comparison1_OVERGAL3_vs_OVERGAL3_THP1"
+    reference: "8505 overgal3"
+    samples: ["8505 overgal3", "8505 overgal3+thp1"]  
+    signature_type: "all"
+  
+  - name: "Comparison2_UT_vs_UT_THP1"
+    reference: "8505 ut"
+    samples: ["8505 ut", "8505 ut+thp1"]
+    signature_type: "all"

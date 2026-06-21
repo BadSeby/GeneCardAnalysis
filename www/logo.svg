@@ -1,0 +1,104 @@
+<svg width="181" height="209" viewBox="0 0 181 209" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>GeneCardAnalysis hex sticker</title>
+
+<defs>
+  <clipPath id="hx">
+    <polygon points="90.5,6 170,50 170,140 90.5,184 11,140 11,50"/>
+  </clipPath>
+</defs>
+
+<polygon points="90.5,6 170,50 170,140 90.5,184 11,140 11,50" fill="#0d1929"/>
+
+<g clip-path="url(#hx)">
+
+  <rect x="14" y="52" width="153" height="130" fill="#111827"/>
+
+  <!-- RT-qPCR · R Shiny — above the heatmap -->
+  <text x="90.5" y="61"
+        text-anchor="middle"
+        font-family="Arial, 'Helvetica Neue', sans-serif"
+        font-size="7" font-weight="400" letter-spacing="1"
+        fill="#64748b">RT-qPCR · R Shiny</text>
+
+  <!-- HEATMAP (7 cols × 5 rows, y starts at 66) -->
+  <!-- col: x=18,39,60,81,102,123,144  w=18  gap=3 -->
+  <!-- row: y=66,75,84,93,102  h=7  gap=2 -->
+
+  <!-- row 1 -->
+  <rect x="18"  y="66" width="18" height="7" rx="1" fill="#1d4ed8"/>
+  <rect x="39"  y="66" width="18" height="7" rx="1" fill="#3b82f6"/>
+  <rect x="60"  y="66" width="18" height="7" rx="1" fill="#93c5fd"/>
+  <rect x="81"  y="66" width="18" height="7" rx="1" fill="#f0f4ff"/>
+  <rect x="102" y="66" width="18" height="7" rx="1" fill="#fca5a5"/>
+  <rect x="123" y="66" width="18" height="7" rx="1" fill="#ef4444"/>
+  <rect x="144" y="66" width="18" height="7" rx="1" fill="#b91c1c"/>
+
+  <!-- row 2 -->
+  <rect x="18"  y="75" width="18" height="7" rx="1" fill="#b91c1c"/>
+  <rect x="39"  y="75" width="18" height="7" rx="1" fill="#ef4444"/>
+  <rect x="60"  y="75" width="18" height="7" rx="1" fill="#fca5a5"/>
+  <rect x="81"  y="75" width="18" height="7" rx="1" fill="#f0f4ff"/>
+  <rect x="102" y="75" width="18" height="7" rx="1" fill="#93c5fd"/>
+  <rect x="123" y="75" width="18" height="7" rx="1" fill="#3b82f6"/>
+  <rect x="144" y="75" width="18" height="7" rx="1" fill="#1d4ed8"/>
+
+  <!-- row 3 -->
+  <rect x="18"  y="84" width="18" height="7" rx="1" fill="#1d4ed8"/>
+  <rect x="39"  y="84" width="18" height="7" rx="1" fill="#60a5fa"/>
+  <rect x="60"  y="84" width="18" height="7" rx="1" fill="#bfdbfe"/>
+  <rect x="81"  y="84" width="18" height="7" rx="1" fill="#fca5a5"/>
+  <rect x="102" y="84" width="18" height="7" rx="1" fill="#fca5a5"/>
+  <rect x="123" y="84" width="18" height="7" rx="1" fill="#60a5fa"/>
+  <rect x="144" y="84" width="18" height="7" rx="1" fill="#1d4ed8"/>
+
+  <!-- row 4 -->
+  <rect x="18"  y="93" width="18" height="7" rx="1" fill="#3b82f6"/>
+  <rect x="39"  y="93" width="18" height="7" rx="1" fill="#93c5fd"/>
+  <rect x="60"  y="93" width="18" height="7" rx="1" fill="#f0f4ff"/>
+  <rect x="81"  y="93" width="18" height="7" rx="1" fill="#ef4444"/>
+  <rect x="102" y="93" width="18" height="7" rx="1" fill="#f0f4ff"/>
+  <rect x="123" y="93" width="18" height="7" rx="1" fill="#93c5fd"/>
+  <rect x="144" y="93" width="18" height="7" rx="1" fill="#3b82f6"/>
+
+  <!-- row 5 -->
+  <rect x="18"  y="102" width="18" height="7" rx="1" fill="#ef4444"/>
+  <rect x="39"  y="102" width="18" height="7" rx="1" fill="#fca5a5"/>
+  <rect x="60"  y="102" width="18" height="7" rx="1" fill="#f0f4ff"/>
+  <rect x="81"  y="102" width="18" height="7" rx="1" fill="#bfdbfe"/>
+  <rect x="102" y="102" width="18" height="7" rx="1" fill="#3b82f6"/>
+  <rect x="123" y="102" width="18" height="7" rx="1" fill="#1d4ed8"/>
+  <rect x="144" y="102" width="18" height="7" rx="1" fill="#b91c1c"/>
+
+  <!-- thin divider -->
+  <line x1="30" y1="116" x2="151" y2="116" stroke="#1e3a5f" stroke-width="0.8"/>
+
+  <!-- GCA monogram -->
+  <text x="90.5" y="133"
+        text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="34" font-weight="700" letter-spacing="-1"
+        fill="#3b82f6" opacity="0.38">GCA</text>
+
+  <!-- GeneCard — smaller than before -->
+  <text x="90.5" y="150"
+        text-anchor="middle"
+        font-family="Arial, 'Helvetica Neue', sans-serif"
+        font-size="18" font-weight="700" letter-spacing="0.5"
+        fill="#f1f5f9">GeneCard</text>
+
+  <!-- ANALYSIS — smaller -->
+  <text x="90.5" y="162"
+        text-anchor="middle"
+        font-family="Arial, 'Helvetica Neue', sans-serif"
+        font-size="10" font-weight="400" letter-spacing="3.5"
+        fill="#60a5fa">ANALYSIS</text>
+
+</g>
+
+<!-- borders -->
+<polygon points="90.5,6 170,50 170,140 90.5,184 11,140 11,50"
+         fill="none" stroke="#3b82f6" stroke-width="3.5" opacity="0.8"/>
+<polygon points="90.5,2 174,48 174,142 90.5,188 7,142 7,48"
+         fill="none" stroke="#1e3a5f" stroke-width="2" opacity="0.5"/>
+
+</svg>

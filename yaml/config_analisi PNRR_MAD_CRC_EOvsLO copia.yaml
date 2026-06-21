@@ -1,0 +1,61 @@
+# ############################################
+# Bioinformtic Section
+# ############################################
+author: "SDB" # SDB, FO, RNB
+
+
+# ############################################
+# Biologist Section
+# ############################################
+project_name: "PNRR_MAD_CRC_EARLY ONSET"
+input_file: "PNRR_MAD_CRC_EOvsLO.csv"
+
+# Impostazioni Globali
+global_settings:
+  housekeeping_genes: ["GAPDH", "HPRT1", "RPL13", "RPL7"]
+  undetermined_value: 40
+  exclude_genes: ["HGDC", "QIC", "PPC"] # Geni da ignorare sempre
+
+# Definizione dei Confronti
+comparisons: 
+  - name: "Comparison1"
+    reference: "LO-CRC #8 UT"
+    samples: ["LO-CRC #8 UT", "LO-CRC #8 CM"]   
+    signature_type: "all"
+
+  - name: "Comparison2"
+    reference: "LO-CRC #3 UT"
+    samples: ["LO-CRC #3 UT","LO-CRC #3 CM"]   
+    signature_type: "all"
+
+ - name: "Comparison3"
+    reference: "EO-CRC #2 UT"
+    samples: ["EO-CRC #2 UT","EO-CRC #2 CM"]   
+    signature_type: "all"
+
+ - name: "Comparison4"
+    reference: "EO-CRC #58 UT"
+    samples: ["EO-CRC #58 UT","EO-CRC #58 CM"]   
+    signature_type: "all"
+
+- name: "Comparison5"
+    reference: "LO-CRC #8 UT", "LO-CRC #3 UT"
+    samples: ["LO-CRC #8 UT", "LO-CRC #3 UT", "LO-CRC #8 CM", "LO-CRC #3 CM"]   
+    signature_type: "all"
+
+- name: "Comparison6"
+    reference: "EO-CRC #2 UT", "EO-CRC #58 UT"
+    samples: ["EO-CRC #2 UT", "EO-CRC #58 UT", "EO-CRC #2 CM", "EO-CRC #58 CM"]   
+    signature_type: "all"
+
+- - name: "Comparison7"
+    reference: "LO-CRC #8 UT", "LO-CRC #3 UT"
+    samples: ["LO-CRC #8 UT", "LO-CRC #3 UT", "EO-CRC #2 UT", "EO-CRC #58 UT"]   
+    signature_type: "all"
+
+- - name: "Comparison8"
+    reference: "LO-CRC #8 CM", "LO-CRC #3 CM"
+    samples: ["LO-CRC #8 CM", "LO-CRC #3 CM", "EO-CRC #2 CM", "EO-CRC #58 CM"]   
+    signature_type: "all"
+
+

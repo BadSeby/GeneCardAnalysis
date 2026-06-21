@@ -1,0 +1,138 @@
+---
+title: "Gene Card Analysis Dashboard"
+format:
+  dashboard:
+    scrolling: true
+    theme: cosmo
+    embed-resources: true
+params:
+  rds_path: ""
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+#| include: false
+library(tidyverse)
+library(DT)
+library(knitr)
+
+# Carica i dati salvati dallo script principale
+data        <- readRDS(params$rds_path)
+results     <- data$results
+config      <- data$config
+author_name <- data$author_name
+
+# I path nelle immagini sono già assoluti (normalizzati nello script R).
+# Li estraiamo in liste nominate per renderli accessibili nei knit_child.
+img_paths   <- setNames(lapply(results, `[[`, "img_path"),   names(results))
+log2fc_list <- setNames(lapply(results, `[[`, "log2fc"),     names(results))
+comp_names  <- names(results)
+```
+
+# Overview
+
+## Row {height="20%"}
+
+```{r}
+#| content: valuebox
+#| title: "Progetto"
+list(icon = "folder2-open", color = "primary", value = config$project_name)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Autore"
+list(icon = "person-circle", color = "secondary", value = author_name)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Confronti"
+list(icon = "layers", color = "success", value = length(results))
+```
+
+```{r}
+#| content: valuebox
+#| title: "Data Analisi"
+list(icon = "calendar3", color = "info", value = format(Sys.Date(), "%d %b %Y"))
+```
+
+## Row {height="80%"}
+
+```{r}
+#| title: "Riepilogo Confronti"
+tibble(
+  Confronto   = names(results),
+  Geni        = sapply(results, \(r) nrow(r$matrix)),
+  Campioni    = sapply(results, \(r) ncol(r$matrix)),
+  Riferimento = sapply(results, \(r) r$info$reference),
+  Firma       = sapply(results, \(r) r$info$signature_type)
+) |>
+  DT::datatable(
+    options  = list(dom = "t", pageLength = 20),
+    rownames = FALSE
+  )
+```
+
+# Heatmaps
+
+## Row {.tabset}
+
+```{r}
+#| output: asis
+# Genera un tab per ogni confronto usando knit_child.
+# knitr::include_graphics() gestisce correttamente path assoluti con spazi.
+chunks <- lapply(comp_names, function(nm) {
+  knitr::knit_child(
+    text = c(
+      paste0("### ", nm),
+      "",
+      "```{r}",
+      "#| echo: false",
+      "#| out-width: '100%'",
+      paste0("knitr::include_graphics(img_paths[['", nm, "']])"),
+      "```",
+      ""
+    ),
+    envir = knitr::knit_global(),
+    quiet = TRUE
+  )
+})
+cat(unlist(chunks), sep = "\n")
+```
+
+# Tabelle Log2FC
+
+## Row {.tabset}
+
+```{r}
+#| output: asis
+# Genera un tab interattivo per ogni confronto.
+chunks <- lapply(comp_names, function(nm) {
+  if (is.null(log2fc_list[[nm]])) return(NULL)
+  knitr::knit_child(
+    text = c(
+      paste0("### ", nm),
+      "",
+      "```{r}",
+      "#| echo: false",
+      paste0("DT::datatable("),
+      paste0("  log2fc_list[['", nm, "']],"),
+      "  filter     = 'top',",
+      "  extensions = 'Buttons',",
+      paste0("  options = list(pageLength = 15, scrollX = TRUE, dom = 'Bfrtip',"),
+      paste0("    buttons = list(list(extend = 'excel', filename = '", nm, "', text = 'Download Excel'))),"),
+      "  rownames = FALSE",
+      ")",
+      "```",
+      ""
+    ),
+    envir = knitr::knit_global(),
+    quiet = TRUE
+  )
+})
+cat(unlist(chunks), sep = "\n")
+```

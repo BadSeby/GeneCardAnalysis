@@ -1,0 +1,366 @@
+/* ============================================================================
+   Gene Card Analysis — custom.css
+   Dark sidebar + main light.  Salvare in  www/custom.css
+   ============================================================================ */
+
+:root {
+  --gca-sidebar:   #161e2b;
+  --gca-sidebar-2: #1c2738;
+  --gca-bg-dark:   #0f1620;
+  --gca-input-dk:  #0f1722;
+  --gca-side-text: #cbd5e1;
+  --gca-side-mut:  #64748b;
+  --gca-primary:   #3b82f6;
+  --gca-primary-d: #2563eb;
+  --gca-accent:    #06b6d4;
+  --gca-border:    #e3e8f0;
+}
+
+/* ===== BRAND (navbar title) ============================================== */
+.app-brand { display: flex; align-items: center; gap: 12px; }
+.app-logo {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: inline-grid; place-items: center; color: #fff; font-size: 16px;
+  background: linear-gradient(135deg, var(--gca-primary), var(--gca-accent));
+  box-shadow: 0 4px 14px rgba(59,130,246,.4);
+}
+.app-brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+.app-brand-title { font-size: 16px; font-weight: 700; }
+.app-brand-sub {
+  font-size: 10.5px; color: var(--gca-side-mut);
+  letter-spacing: .05em; text-transform: uppercase;
+}
+
+/* ===== SIDEBAR (dark) ==================================================== */
+.gca-sidebar, .sidebar > .gca-sidebar, aside.gca-sidebar {
+  background: linear-gradient(180deg, var(--gca-sidebar) 0%, var(--gca-bg-dark) 100%) !important;
+  color: var(--gca-side-text) !important;
+  border-right: 1px solid rgba(255,255,255,.06) !important;
+}
+.bslib-sidebar-layout > .sidebar {
+  background: linear-gradient(180deg, var(--gca-sidebar) 0%, var(--gca-bg-dark) 100%) !important;
+}
+.bslib-sidebar-layout > .sidebar .sidebar-content,
+.gca-sidebar .sidebar-content { color: var(--gca-side-text); }
+
+/* labels nella sidebar */
+.gca-sidebar label,
+.gca-sidebar .form-label,
+.gca-sidebar .control-label,
+.gca-sidebar .shiny-input-container label { color: var(--gca-side-text) !important; }
+.gca-sidebar .help-block,
+.gca-sidebar .shiny-input-container .help-block,
+.gca-sidebar small { color: var(--gca-side-mut) !important; }
+.gca-sidebar hr { border-top: 1px solid rgba(255,255,255,.08); }
+
+/* section label "Carica Dati" ecc. */
+.side-label {
+  font-size: 10.5px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--gca-side-mut);
+  margin: 14px 2px 8px; display: flex; align-items: center; gap: 8px;
+}
+.side-label .fa, .side-label svg { color: var(--gca-primary); }
+
+/* card interne alla sidebar */
+.gca-side-card {
+  background: var(--gca-sidebar-2) !important;
+  border: 1px solid rgba(255,255,255,.06) !important;
+  border-radius: 11px !important;
+  box-shadow: none !important;
+}
+.gca-side-card .card-body { padding: 14px !important; }
+
+/* input testo / numerici / select nella sidebar */
+.gca-sidebar .form-control,
+.gca-sidebar .form-select {
+  background: var(--gca-input-dk) !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  color: var(--gca-side-text) !important;
+}
+.gca-sidebar .form-control::placeholder { color: var(--gca-side-mut) !important; }
+.gca-sidebar .form-control:focus,
+.gca-sidebar .form-select:focus {
+  border-color: var(--gca-primary) !important;
+  box-shadow: 0 0 0 3px rgba(59,130,246,.18) !important;
+}
+
+/* file input */
+.gca-sidebar .input-group-text,
+.gca-sidebar .form-control[type="file"] {
+  background: var(--gca-input-dk) !important;
+  color: var(--gca-side-text) !important;
+  border-color: rgba(255,255,255,.10) !important;
+}
+.gca-sidebar .btn-file, .gca-sidebar .input-group .btn {
+  background: var(--gca-primary) !important;
+  border-color: var(--gca-primary) !important;
+  color: #fff !important;
+}
+.gca-sidebar .progress { background: rgba(255,255,255,.08) !important; }
+.gca-sidebar .progress-bar { background: var(--gca-primary) !important; }
+
+/* radio buttons */
+.gca-sidebar .form-check-input { background-color: var(--gca-input-dk); border-color: rgba(255,255,255,.25); }
+.gca-sidebar .form-check-input:checked { background-color: var(--gca-primary); border-color: var(--gca-primary); }
+.gca-sidebar .form-check-label { color: var(--gca-side-text) !important; }
+
+/* selectize dropdown */
+.gca-sidebar .selectize-input {
+  background: var(--gca-input-dk) !important;
+  border-color: rgba(255,255,255,.10) !important;
+  color: var(--gca-side-text) !important;
+}
+.gca-sidebar .selectize-input input { color: var(--gca-side-text) !important; }
+.selectize-dropdown { background: #1c2738; color: var(--gca-side-text); }
+.selectize-dropdown .active { background: var(--gca-primary); color: #fff; }
+
+/* bottone principale Esegui */
+.gca-btn-run {
+  background: linear-gradient(135deg, var(--gca-primary), var(--gca-primary-d)) !important;
+  border: none !important; font-weight: 700 !important;
+  box-shadow: 0 6px 18px rgba(37,99,235,.40) !important;
+  transition: transform .1s, box-shadow .15s !important;
+}
+.gca-btn-run:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(37,99,235,.5) !important; }
+
+/* bottoni ghost nella sidebar */
+.gca-sidebar .btn-outline-info,
+.gca-sidebar .btn-outline-secondary {
+  border-color: rgba(255,255,255,.14) !important;
+  color: var(--gca-side-text) !important;
+  background: transparent !important;
+}
+.gca-sidebar .btn-outline-info:hover,
+.gca-sidebar .btn-outline-secondary:hover { background: rgba(255,255,255,.06) !important; }
+
+/* card confronto nel form manuale */
+.gca-sidebar .card { background: var(--gca-sidebar-2) !important; color: var(--gca-side-text) !important; }
+.gca-sidebar .card-header { color: var(--gca-side-text) !important; border-color: rgba(255,255,255,.08) !important; }
+
+/* alert inline (stato YAML) */
+.gca-sidebar .alert-success { background: rgba(16,185,129,.14) !important; color: #34d399 !important; border-color: rgba(16,185,129,.28) !important; }
+.gca-sidebar .alert-danger  { background: rgba(239,68,68,.14)  !important; color: #fca5a5 !important; border-color: rgba(239,68,68,.28)  !important; }
+.gca-sidebar .alert-warning { background: rgba(245,158,11,.14) !important; color: #fcd34d !important; border-color: rgba(245,158,11,.28) !important; }
+
+
+/* ===== MAIN PANEL ======================================================= */
+
+/* card header con icona colorata */
+.card-header { font-weight: 600; display: flex; align-items: center; gap: 9px; }
+.card-header .fa, .card-header svg { color: var(--gca-primary); }
+
+/* value box standard (Home, Configurazione, Dati) */
+.bslib-value-box {
+  border-top: 3px solid var(--gca-primary);
+  transition: transform .12s, box-shadow .15s;
+  min-height: 96px;
+}
+.bslib-value-box:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(15,22,32,.08); }
+.bslib-value-box .value-box-showcase { opacity: .14; font-size: 2.4rem; }
+.bslib-value-box .value-box-area { padding: 10px 14px; justify-content: center; }
+.bslib-value-box .value-box-title { font-size: .8rem; white-space: normal; }
+.bslib-value-box .value-box-value { font-size: 1.4rem; line-height: 1.15; word-break: break-word; }
+
+/* tab underline */
+.nav-underline .nav-link.active {
+  color: var(--gca-primary) !important;
+  border-bottom-color: var(--gca-primary) !important;
+  font-weight: 600;
+}
+.nav-underline .nav-link { color: #64748b; }
+.nav-underline .nav-link .fa, .nav-underline .nav-link svg { margin-right: 6px; }
+
+/* tabella DT compatta */
+table.dataTable tbody td { padding: 6px 9px; }
+
+/* card generali: bordo morbido */
+.card { border: 1px solid var(--gca-border); }
+
+
+/* ===== RESULTS — TOOLBAR ================================================
+   Riga "Confronto [select] | [PNG] [PDF z] [PDF n] [Excel] [.txt]"
+   ======================================================================== */
+
+.gca-results-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 9px 14px;
+  background: #f8fafc;
+  border: 1px solid var(--gca-border);
+  border-radius: 10px;
+}
+
+/* Blocco label + selectInput "Confronto" */
+.gca-comp-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+/* Rimuove margine bottom di default di Shiny sul selectInput */
+.gca-comp-picker .shiny-input-container,
+.gca-comp-picker .form-group { margin-bottom: 0 !important; }
+
+.gca-picker-label {
+  font-size: 0.80em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: #475569;
+  white-space: nowrap;
+}
+
+/* Separatore verticale tra picker e bottoni */
+.gca-toolbar-sep {
+  width: 1px;
+  height: 26px;
+  background: var(--gca-border);
+  flex-shrink: 0;
+}
+
+/* Blocco bottoni download */
+.gca-results-dl {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+/* Dimensioni bottoni nella toolbar */
+.gca-results-dl .btn { font-size: .76em; padding: 3px 9px; line-height: 1.5; }
+
+
+/* ===== RESULTS — STAT ROW compatta ======================================
+   Value + label sulla stessa riga, font ridotto, card più bassa
+   ======================================================================== */
+
+.gca-stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+@media (max-width: 1100px) { .gca-stat-row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width:  620px) { .gca-stat-row { grid-template-columns: 1fr; } }
+
+/* Card stat — orizzontale: [icona] [valore · label] */
+.gca-stat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid var(--gca-border);
+  border-left: 4px solid var(--gca-primary); /* accento a sinistra */
+  border-top: none;
+  border-radius: 9px;
+  padding: 8px 13px;
+  min-height: unset;                           /* rimosso min-height fisso */
+  transition: transform .12s, box-shadow .15s;
+}
+.gca-stat:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(15,22,32,.07); }
+
+/* Icona */
+.gca-stat-ico {
+  width: 32px; height: 32px;
+  flex-shrink: 0;
+  display: grid; place-items: center;
+  border-radius: 7px;
+  font-size: 14px;
+  background: rgba(59,130,246,.10);
+  color: var(--gca-primary);
+}
+
+/* Contenitore testo — value e label AFFIANCATI */
+.gca-stat > div:last-child {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.gca-stat-val {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #1e293b;
+  white-space: nowrap;
+}
+/* Valori lunghi (nome firma, nome campione) */
+.gca-stat-val-sm {
+  font-size: .88rem;
+  word-break: break-word;
+  white-space: normal;
+}
+.gca-stat-lab {
+  font-size: .68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--gca-side-mut);
+  margin-top: 0;
+  white-space: nowrap;
+}
+
+/* Varianti colore bordo sinistro + icona */
+.gca-stat-p { border-left-color: var(--gca-primary); }
+.gca-stat-p .gca-stat-ico { background: rgba(59,130,246,.10); color: var(--gca-primary); }
+
+.gca-stat-s { border-left-color: #8b5cf6; }
+.gca-stat-s .gca-stat-ico { background: rgba(139,92,246,.10); color: #8b5cf6; }
+
+.gca-stat-i { border-left-color: var(--gca-accent); }
+.gca-stat-i .gca-stat-ico { background: rgba(6,182,212,.10); color: var(--gca-accent); }
+
+.gca-stat-g { border-left-color: #10b981; }
+.gca-stat-g .gca-stat-ico { background: rgba(16,185,129,.10); color: #10b981; }
+
+/* Variante a 3 colonne (tab Configurazione) */
+.gca-stat-row-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+@media (max-width: 860px) { .gca-stat-row-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+
+/* ===== RESULTS — VIZOPTS BAR ==============================================
+   Seconda riga sotto la toolbar: clustering + ordine colonne
+   ======================================================================== */
+
+.gca-results-vizopts {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 7px 14px;
+  background: #f1f5f9;
+  border: 1px solid var(--gca-border);
+  border-radius: 10px;
+  font-size: .85em;
+}
+
+.gca-vopts-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Rimuove margini Shiny di default all'interno dei gruppi */
+.gca-vopts-group .shiny-input-container,
+.gca-vopts-group .form-group { margin-bottom: 0 !important; }
+.gca-vopts-group .shiny-options-group { margin-bottom: 0; }
+.gca-vopts-group .form-check { margin-bottom: 0 !important; }
+
+/* Radio buttons inline compatti */
+.gca-vopts-group .form-check-inline { margin-right: 10px; }
+
+/* Separatore verticale tra i gruppi */
+.gca-vopts-sep {
+  width: 1px;
+  height: 26px;
+  background: var(--gca-border);
+  flex-shrink: 0;
+}

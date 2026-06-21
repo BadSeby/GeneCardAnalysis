@@ -1,0 +1,92 @@
+---
+title: "Report Analisi Gene Card (RT-qPCR)"
+subtitle: "Differential Expression Analysis - Progetto: `r params$config$project_name`"
+author: "Stassi Lab - `r params$author_name`"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output:
+  html_document:
+    self_contained: true
+    toc: true
+    toc_float: true
+    theme: cosmo
+    highlight: pygments
+params:
+  results: NULL
+  config: NULL
+  author_name: "Unknown"
+---
+
+<style>
+  body { font-family: "Segoe UI", Arial, sans-serif; font-size: 15px; color: #2c3e50; }
+  h1 { color: #12395b; border-bottom: 2px solid #d6e4f0; padding-bottom: 10px; }
+  .note-box { background: #f7fbff; border-left: 4px solid #1f5f8b; padding: 15px; margin: 20px 0; border-radius: 6px; }
+</style>
+
+# ------------------------------------------------------------------------------
+# 1. Dataset e Configurazione
+Analisi condotta per il progetto: **`r params$config$project_name`**.
+
+<div class="note-box">
+**Parametri di Processamento:**
+- **Housekeeping:** `r paste(params$config$global_settings$housekeeping_genes, collapse=", ")`
+- **Metodo:** Normalizzazione $\Delta \Delta Ct$.
+</div>
+
+---
+
+# ------------------------------------------------------------------------------
+```{r loop_comparisons, results='asis', echo=FALSE}
+library(knitr)
+library(kableExtra)
+library(dplyr)
+
+# Inizio ciclo dei confronti
+for (comp_name in names(params$results)) {
+  res <- params$results[[comp_name]]
+  
+  # Stampiamo il titolo del confronto
+  cat("\n\n# 2. Confronto:", comp_name, "\n")
+  
+  # Apertura Container Flexbox
+  cat("<div style='display: flex; flex-wrap: nowrap; gap: 20px; align-items: flex-start; margin-bottom: 50px;'>")
+  
+  # --- COLONNA SINISTRA: HEATMAP ---
+  cat("<div style='flex: 0 0 55%;'>")
+  cat("#### Heatmap (Z-score)\n")
+  if(!is.null(res$img_path) && file.exists(res$img_path)) {
+    cat(paste0("<img src='", res$img_path, "' style='width:100%; border: 1px solid #eee;'>"))
+  } else {
+    cat("<p style='color:red;'>Immagine non trovata.</p>")
+  }
+  cat("</div>")
+  
+  # --- COLONNA DESTRA: TABELLA ---
+  cat("<div style='flex: 0 0 40%;'>")
+  cat("#### Top 15 Geni (Log2FC)\n")
+  
+  if (!is.null(res$log2fc)) {
+    # Prepariamo i dati: prendiamo i primi 15 geni
+    df_tab <- res$log2fc %>% head(15)
+    
+    # Generiamo l'HTML della tabella
+    tab_html <- kable(df_tab, format = "html", digits = 3, row.names = FALSE) %>%
+                kable_styling(bootstrap_options = c("striped", "hover", "condensed"), 
+                              font_size = 12, full_width = FALSE)
+    
+    # IMPORTANTE: Usiamo cat per stampare l'HTML della tabella dentro il div
+    cat(as.character(tab_html))
+  } else {
+    cat("<p>Dati Log2FC non disponibili.</p>")
+  }
+  cat("</div>")
+  
+  cat("</div>") # Chiusura Flexbox
+  cat("\n\n---\n")
+}
+```
+
+# ------------------------------------------------------------------------------
+# 3. Informazioni Riproducibilità
+Ambiente R: `r R.version.string`
+
+Data di generazione: `r format(Sys.Date(), '%d %B %Y')`

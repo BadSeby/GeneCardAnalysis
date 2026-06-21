@@ -1,0 +1,300 @@
+---
+title: "Getting Started with GeneCardAnalysis"
+author: "Sebastiano Di Bella, Francesco Orilio"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 3
+    fig_width: 7
+    fig_height: 5
+vignette: >
+  %\VignetteIndexEntry{Getting Started with GeneCardAnalysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment  = "#>",
+  message  = FALSE,
+  warning  = FALSE
+)
+```
+
+## Overview
+
+**GeneCardAnalysis** is an R Shiny application for reproducible analysis and
+visualisation of RT-qPCR data. It implements the delta-CT normalisation method
+(Livak & Schmittgen, 2001) to compute:
+
+- **Normalised expression**: 2^(−ΔCT), relative to one or more housekeeping genes
+- **Log2 fold-change (log2FC)**: log2(sample / reference condition)
+- **Z-score**: per-gene standardisation on the log2 scale (= −ΔCT), suitable
+  for comparing relative expression patterns across many samples
+
+Results are exported as publication-ready heatmaps (PNG, PDF) and Excel tables.
+
+This vignette demonstrates the core computational functions that underlie the
+app, using a minimal toy dataset with known values so the reader can verify the
+maths by hand.
+
+---
+
+## Installation
+
+```{r install, eval = FALSE}
+# CRAN dependencies
+install.packages(c(
+  "shiny", "bslib", "circlize", "readxl", "tidyverse",
+  "grid", "glue", "writexl", "showtext", "yaml",
+  "DT", "colourpicker", "gtools"
+))
+
+# Bioconductor dependency
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install("ComplexHeatmap")
+
+# Install GeneCardAnalysis from GitHub
+# install.packages("remotes")
+remotes::install_github("StassiLab/GeneCardAnalysis")
+```
+
+```{r load-pkg}
+# Source directly if running from the package root
+source("../card_functions.R")
+source("../signatures_genes_card.R")
+
+library(dplyr)
+library(ggplot2)
+```
+
+---
+
+## 1. Input data format
+
+The app accepts a CSV (or TSV) file with at least three columns:
+
+| Column        | Description                                           |
+|---------------|-------------------------------------------------------|
+| `Sample.Name` | Unique sample identifier (e.g. `UT`, `EMT_24h`)      |
+| `Target.Name` | Gene symbol (e.g. `VIM`, `CDH1`, `GAPDH`)            |
+| `CT`          | Cycle-threshold value, numeric or `"Undetermined"`    |
+
+This format is the default export of Applied Biosystems QuantStudio and
+Bio-Rad CFX Manager. Both comma (`,`) and semicolon (`;`) separators are
+auto-detected by the app.
+
+### Toy dataset
+
+We build a minimal dataset — 2 samples, 4 genes (including housekeeping) —
+with CT values chosen so the output can be verified analytically:
+
+```{r toy-data}
+ct_data <- data.frame(
+  Sample.Name = rep(c("UT", "EMT"), each = 4),
+  Target.Name = rep(c("GAPDH", "VIM", "CDH1", "SNAI1"), times = 2),
+  CT = c(
+    20, 25, 30, 27,   # UT:  GAPDH=20, VIM=25, CDH1=30, SNAI1=27
+    20, 23, 32, 24    # EMT: GAPDH=20, VIM=23, CDH1=32, SNAI1=24
+  ),
+  stringsAsFactors = FALSE
+)
+
+ct_data
+```
+
+---
+
+## 2. Delta-CT normalisation
+
+`extract.normalised.CTs()` applies the delta-CT method and returns a
+**genes × samples** matrix of 2^(−ΔCT) values.
+
+```{r normalise}
+norm_mat <- extract.normalised.CTs(
+  CTs               = ct_data,
+  housekeeping.gene = "GAPDH",   # explicit; auto-selects GAPDH/HPRT1 if NULL
+  undetermined      = 40,        # value for "Undetermined" calls
+  handle.NAs        = TRUE       # impute NAs near the observed minimum
+)
+
+round(norm_mat, 6)
+```
+
+### Verification
+
+For `VIM` in the `UT` sample:
+
+$$
+\Delta CT = CT_{VIM} - CT_{GAPDH} = 25 - 20 = 5
+$$
+$$
+2^{-\Delta CT} = 2^{-5} = 0.03125
+$$
+
+```{r verify}
+expected_VIM_UT <- 2^(-(25 - 20))
+cat("Expected VIM/UT:", expected_VIM_UT, "\n")
+cat("Computed VIM/UT:", norm_mat["VIM", "UT"], "\n")
+cat("Match:", isTRUE(all.equal(norm_mat["VIM", "UT"], expected_VIM_UT)), "\n")
+```
+
+Note that `GAPDH` is absent from the output — it is used for normalisation
+and then removed.
+
+---
+
+## 3. Log2 fold-change
+
+Log2FC is computed as log2(sample / reference), where `UT` is the reference:
+
+```{r log2fc}
+ref_col   <- "UT"
+log2fc_mat <- log2(norm_mat / norm_mat[, ref_col])
+log2fc_mat[is.infinite(log2fc_mat)] <- NA
+
+round(log2fc_mat, 4)
+```
+
+Interpretation:
+
+- `VIM` log2FC = `r round(log2fc_mat["VIM", "EMT"], 3)` in EMT vs UT →
+  VIM is **upregulated** (~`r round(2^log2fc_mat["VIM", "EMT"], 1)`× more expressed)
+- `CDH1` log2FC = `r round(log2fc_mat["CDH1", "EMT"], 3)` in EMT vs UT →
+  CDH1 is **downregulated** (consistent with EMT)
+
+---
+
+## 4. Z-score (log2 scale)
+
+> **Important**: z-scores must be computed on the **log2 scale**
+> (i.e. log2(2^(−ΔCT)) = −ΔCT), not on the raw 2^(−ΔCT) values.
+> Computing z-scores on exponential data violates the normality assumption
+> of the standardisation and distorts patterns towards highly-expressed genes.
+
+```{r zscore}
+mat_log2 <- log2(norm_mat)
+mat_log2[!is.finite(mat_log2)] <- NA
+
+# Per-gene z-score across samples (scale rows)
+zmat <- t(scale(t(mat_log2)))
+round(zmat, 3)
+```
+
+---
+
+## 5. Gene signatures
+
+The package ships with four built-in gene panels:
+
+```{r signatures}
+sigs <- get_signatures()
+names(sigs)
+
+# Number of genes in each panel
+sapply(sigs[sigs != "all"], length)
+```
+
+Custom signatures can be defined in the YAML configuration file:
+
+```yaml
+custom_signatures:
+  MyEMTPanel: ["VIM", "CDH1", "SNAI1", "ZEB1", "TWIST1"]
+```
+
+And accessed programmatically:
+
+```{r custom-sig}
+cfg <- list(
+  custom_signatures = list(
+    MyEMTPanel = c("VIM", "CDH1", "SNAI1", "ZEB1", "TWIST1")
+  )
+)
+sigs_custom <- get_signatures(cfg)
+sigs_custom$custom_MyEMTPanel
+```
+
+`build_signature_choices()` returns a named vector ready for use in
+`shiny::selectInput()`:
+
+```{r sig-choices}
+build_signature_choices(cfg)
+```
+
+---
+
+## 6. Raw CT extraction
+
+`extract.CTs()` returns the raw CT matrix (no normalisation), useful for
+quality control and visual inspection of housekeeping gene stability:
+
+```{r raw-cts}
+raw_mat <- extract.CTs(ct_data)
+round(raw_mat, 2)
+```
+
+### Housekeeping gene stability
+
+A simple CV (coefficient of variation) check across samples:
+
+```{r hk-stability}
+hk_cts <- raw_mat["GAPDH", ]
+cat(sprintf(
+  "GAPDH — mean CT: %.2f, SD: %.3f, CV: %.1f%%\n",
+  mean(hk_cts), sd(hk_cts), 100 * sd(hk_cts) / mean(hk_cts)
+))
+```
+
+A CV < 1% indicates excellent housekeeping gene stability, as is the case
+here (GAPDH is identical across both samples in this toy example).
+
+---
+
+## 7. Running the Shiny app
+
+```{r launch-app, eval = FALSE}
+shiny::runApp(".")          # from the GeneCardAnalysis directory
+# or, once installed as a package:
+GeneCardAnalysis::run_app()
+```
+
+The app accepts a YAML configuration file that defines all experimental
+comparisons. A minimal example:
+
+```yaml
+project_name: EMT_study
+author: SDB
+global_settings:
+  housekeeping_genes: [GAPDH]
+  undetermined_value: 40
+  exclude_genes: [RT, gDNA, GDNA, PCR]
+comparisons:
+  - name: EMT_vs_UT
+    reference: UT
+    samples: [UT, EMT]
+    signature_type: signature_emt
+    cluster_heatmap: true
+```
+
+---
+
+## Session information
+
+```{r session-info}
+sessionInfo()
+```
+
+---
+
+## References
+
+Livak KJ, Schmittgen TD (2001). "Analysis of relative gene expression data
+using real-time quantitative PCR and the 2^(−ΔΔCT) Method."
+*Methods*, **25**(4), 402–408. doi:[10.1006/meth.2001.1262](https://doi.org/10.1006/meth.2001.1262)
+
+Gu Z, Eils R, Schlesner M (2016). "Complex heatmaps reveal patterns and
+correlations in multidimensional genomic data."
+*Bioinformatics*, **32**(18), 2847–2849. doi:[10.1093/bioinformatics/btw313](https://doi.org/10.1093/bioinformatics/btw313)

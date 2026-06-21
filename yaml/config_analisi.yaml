@@ -1,0 +1,34 @@
+# ############################################
+# Bioinformtic Section
+# ############################################
+author: "SDB" # SDB, FO, RNB
+
+
+# ############################################
+# Biologist Section
+# ############################################
+project_name: "Studio_Tumore_Thyroid_2026" # Nome del Progetto
+input_file: "card1.csv" # Nome della card in .csv
+
+# Impostazioni Globali
+global_settings:
+  housekeeping_genes: ["GAPDH", "HPRT1" , "GUSB", "RPLP0", "TBP", "ACTB","B2M"] # Housekeeping
+  undetermined_value: 40 # Default a 40
+  exclude_genes: ["RT", "gDNA"] # Geni da ignorare sempre
+
+# Definizione dei Confronti Esempio di schema con 3 confronti
+comparisons:
+  - name: "Comparison1"
+    reference: "8505 ut"
+    samples: "all" # o lista ["UT", "Sample1", "Sample2"]
+    signature_type: "all"
+    
+  - name: "Comparison2"
+    reference: "8505 overgal3"
+    samples: ["8505 overgal3", "8505 overgal3+thp1"] # "all" # o lista ["UT", "Sample1", "Sample2"]
+    signature_type: "all"
+  
+  - name: "Comparison3"
+    reference: "8505 ut"
+    samples: ["8505 ut", "8505 ut+thp1"]
+    signature_type: "all"

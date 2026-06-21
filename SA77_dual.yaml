@@ -1,0 +1,43 @@
+# ############################################
+# Bioinformtic Section
+# ############################################
+author: "SDB" # SDB, FO, RNB
+
+
+# ############################################
+# Biologist Section
+# ############################################
+project_name: "SA77_DUAL"
+input_file: "SA77_dual.csv"
+
+# Impostazioni Globali
+global_settings:
+  housekeeping_genes: ["GAPDH", "HPRT1", "RPL13", "RPL7"]
+  undetermined_value: 40
+  exclude_genes: ["RT", "gDNA"] # Geni da ignorare sempre
+
+# Definizione dei Confronti
+comparisons:
+  - name: "all_Analysis"
+    reference: "SA77 DUAL EVPLV"
+    samples: "all" 
+    signature_type: "all"
+    cluster_heatmap: false   # true = clusterizza righe e colonne
+
+  - name: "Emt"
+    reference: "SA77 DUAL EVPLV"
+    samples: ["SA77 DUAL EVPLV","SA77 DUAL OECD93"]
+    signature_type: "signature_emt"
+    cluster_heatmap: false
+
+  - name: "Metastasis"
+    reference: "SA77 DUAL EVPLV"
+    samples: ["SA77 DUAL EVPLV","SA77 DUAL OECD93"]
+    signature_type: "signature_metastasis"
+    cluster_heatmap: false
+
+  - name: "Metabolism"
+    reference: "SA77 DUAL EVPLV"
+    samples: ["SA77 DUAL EVPLV","SA77 DUAL OECD93"]
+    signature_type: "signature_metabolism"
+    cluster_heatmap: false

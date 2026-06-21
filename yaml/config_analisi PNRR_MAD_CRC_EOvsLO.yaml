@@ -1,0 +1,49 @@
+# ############################################
+# Bioinformtic Section
+# ############################################
+author: "SDB" # SDB, FO, RNB
+
+
+# ############################################
+# Biologist Section
+# ############################################
+project_name: "PNRR_MAD_CRC_EARLY ONSET"
+input_file: "pnrr_mad.csv"
+
+# Impostazioni Globali
+global_settings:
+  housekeeping_genes: ["GAPDH", "HPRT1", "RPL13", "RPL7"]
+  undetermined_value: 40
+  exclude_genes: ["HGDC", "QIC", "PPC"] # Geni da ignorare sempre
+
+# Definizione dei Confronti
+comparisons:
+  - name: "Comparison5"
+    reference: "g605 STARV"
+    samples: ["g605 STARV", "g605 MC", "RE121 starv", "RE121 MC","UAN16 STARV", "UAN16 CM","SA107 Starv", "SA107 CM"]   
+    signature_type: "all"
+    cluster_heatmap: true   # true = clusterizza righe e colonne
+
+  - name: "Comparison6"
+    reference: "g605 STARV"
+    samples: ["g605 STARV", "SA107 Starv"]   
+    signature_type: "all"
+    cluster_heatmap: false   # true = clusterizza righe e colonne
+
+  - name: "Comparison7"
+    reference: "RE121 starv"
+    samples: ["RE121 starv", "UAN16 STARV"]   
+    signature_type: "all"
+    cluster_heatmap: false   # true = clusterizza righe e colonne
+
+  - name: "Comparison8"
+    reference: "g605 CM"
+    samples: ["g605 CM", "SA107 CM"]   
+    signature_type: "all"
+    cluster_heatmap: false   # true = clusterizza righe e colonne
+  
+  - name: "Comparison9"
+    reference: "RE121 CM"
+    samples: ["RE121 CM", "UAN16 CM"]   
+    signature_type: "all"
+    cluster_heatmap: false   # true = clusterizza righe e colonne

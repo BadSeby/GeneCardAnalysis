@@ -22,14 +22,17 @@ library(gtools)
 source("R/card_functions.R")
 source("R/signatures_genes_card.R")
 
-# Font and showtext — must be called once at startup
-tryCatch(
-  font_add_google("Arimo", "Arimo"),
-  error = function(e) {
-    message("Google Font unavailable (", conditionMessage(e), "). Using default font.")
-  }
-)
-showtext_auto()
+# Font and showtext — only activate if the font actually loads.
+# On shinyapps.io showtext_auto() can interfere with ComplexHeatmap's grid device,
+# so we guard it strictly.
+.font_loaded <- tryCatch({
+  font_add_google("Arimo", "Arimo")
+  TRUE
+}, error = function(e) {
+  message("Google Font unavailable (", conditionMessage(e), "). Using default font.")
+  FALSE
+})
+if (isTRUE(.font_loaded)) showtext_auto()
 
 # ==============================================================================
 # Base signature choices (fallback; dynamic choices are in reactive_signature_choices in server)

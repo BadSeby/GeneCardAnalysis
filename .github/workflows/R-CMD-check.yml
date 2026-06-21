@@ -47,7 +47,7 @@ jobs:
       - name: Install BiocManager
         run: |
           install.packages("BiocManager", repos = "https://cloud.r-project.org")
-          BiocManager::install(version = "3.19", ask = FALSE, update = FALSE)
+          BiocManager::install(ask = FALSE, update = FALSE)
         shell: Rscript {0}
 
       # Install all package dependencies declared in DESCRIPTION

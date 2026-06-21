@@ -8,10 +8,16 @@ suppressPackageStartupMessages({
   library(ggplot2)
 })
 
-# Source functions under test (relative to package root)
-pkg_root <- normalizePath(file.path(dirname(getwd()), ".."), mustWork = FALSE)
-source(file.path(pkg_root, "card_functions.R"),       local = FALSE)
-source(file.path(pkg_root, "signatures_genes_card.R"), local = FALSE)
+# During R CMD check the package is installed and functions are in the namespace.
+# For local interactive testing (testthat::test_dir), source from R/ if needed.
+if (!exists("extract.normalised.CTs", mode = "function")) {
+  pkg_root <- normalizePath(file.path(dirname(getwd()), ".."), mustWork = FALSE)
+  r_dir    <- file.path(pkg_root, "R")
+  if (dir.exists(r_dir)) {
+    source(file.path(r_dir, "card_functions.R"),        local = FALSE)
+    source(file.path(r_dir, "signatures_genes_card.R"), local = FALSE)
+  }
+}
 
 # ------------------------------------------------------------------------------
 # Toy CT data builders

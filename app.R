@@ -19,8 +19,8 @@ library(DT)
 library(colourpicker)
 library(gtools)
 
-source("card_functions.R")
-source("signatures_genes_card.R")
+source("R/card_functions.R")
+source("R/signatures_genes_card.R")
 
 # Font and showtext — must be called once at startup
 tryCatch(

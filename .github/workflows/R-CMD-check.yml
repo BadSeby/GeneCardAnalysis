@@ -55,7 +55,7 @@ jobs:
         with:
           extra-packages: |
             any::rcmdcheck
-            Bioconductor/ComplexHeatmap
+            bioc::ComplexHeatmap
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2

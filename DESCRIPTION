@@ -47,5 +47,5 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-URL: https://github.com/StassiLab/GeneCardAnalysis
-BugReports: https://github.com/StassiLab/GeneCardAnalysis/issues
+URL: https://github.com/BadSeby/GeneCardAnalysis
+BugReports: https://github.com/BadSeby/GeneCardAnalysis/issues

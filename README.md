@@ -1,7 +1,7 @@
 # GeneCardAnalysis <img src="www/logo.svg" align="right" height="80" alt="GeneCardAnalysis logo"/>
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/StassiLab/GeneCardAnalysis/actions/workflows/R-CMD-check.yml/badge.svg)](https://github.com/StassiLab/GeneCardAnalysis/actions/workflows/R-CMD-check.yml)
+[![R-CMD-check](https://github.com/BadSeby/GeneCardAnalysis/actions/workflows/R-CMD-check.yml/badge.svg)](https://github.com/BadSeby/GeneCardAnalysis/actions/workflows/R-CMD-check.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![R](https://img.shields.io/badge/R-%3E%3D4.1-blue.svg)](https://cran.r-project.org/)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
@@ -245,7 +245,7 @@ BibTeX:
 ## Contributing
 
 Bug reports and feature requests are welcome via
-[GitHub Issues](https://github.com/StassiLab/GeneCardAnalysis/issues).
+[GitHub Issues](https://github.com/BadSeby/GeneCardAnalysis/issues).
 Pull requests should include tests (`testthat`) and updated documentation.
 
 ---

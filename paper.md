@@ -150,7 +150,7 @@ alongside built-in options in the interface.
 # Availability
 
 GeneCardAnalysis is implemented in R [@rcoreteam] and is available at
-<https://github.com/StassiLab/GeneCardAnalysis> under the MIT License.
+<https://github.com/BadSeby/GeneCardAnalysis> under the MIT License.
 The application can be run locally with:
 
 ```r

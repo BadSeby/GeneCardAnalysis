@@ -19,8 +19,8 @@ library(DT)
 library(colourpicker)
 library(gtools)
 
-source("R/card_functions.R")
-source("R/signatures_genes_card.R")
+# Functions in R/ are loaded automatically by Shiny via pkgload::load_all()
+# because this directory contains a DESCRIPTION file. No explicit source() needed.
 
 # Font and showtext — only activate if the font actually loads.
 # On shinyapps.io showtext_auto() can interfere with ComplexHeatmap's grid device,
@@ -361,7 +361,7 @@ ui <- page_sidebar(
     nav_panel(
       "Results",
       icon = icon("chart-simple"),
-      uiOutput("results_ui")
+      uiOutput("results_ui", suspendWhenHidden = FALSE)
     ),
 
     nav_panel(
@@ -1141,11 +1141,26 @@ server <- function(input, output, session) {
         log2fc_df <- NULL
         
         if (ut_ref %in% colnames(final_matrix)) {
-          log2fc_mat <- log2(as.matrix(final_matrix) / final_matrix[, ut_ref])
-          log2fc_mat[is.infinite(log2fc_mat)] <- NA
-          log2fc_df <- as.data.frame(log2fc_mat) %>%
-            rownames_to_column("Gene") %>%
-            arrange(Gene)
+          log2fc_mat <- tryCatch({
+            m <- log2(as.matrix(final_matrix) / final_matrix[, ut_ref])
+            m[is.infinite(m)] <- NA
+            m
+          }, error = function(e) {
+            log_msg(paste0("[", comp$name, "] log2FC computation error: ", e$message), "error")
+            NULL
+          })
+          if (!is.null(log2fc_mat)) {
+            log2fc_df <- tryCatch({
+              df_lfc <- as.data.frame(log2fc_mat)
+              df_lfc$Gene <- rownames(df_lfc)
+              df_lfc <- df_lfc[order(df_lfc$Gene), c("Gene", setdiff(colnames(df_lfc), "Gene"))]
+              rownames(df_lfc) <- NULL
+              df_lfc
+            }, error = function(e) {
+              log_msg(paste0("[", comp$name, "] log2FC table error: ", e$message), "error")
+              NULL
+            })
+          }
         } else {
           log_msg(paste0("[", comp$name, "] Reference '", ut_ref,
                          "' not found — log2FC not computed"), "warn")
@@ -1179,9 +1194,12 @@ server <- function(input, output, session) {
     results
   })
   
+  # observe() creates a reactive dependency on reactive_analysis().
+  # When reactive_analysis() produces a new value (after btn_run fires),
+  # this observer re-runs and updates rv$results.
+  # Before btn_run is clicked, reactive_analysis() silently suspends — no error shown.
   observe({
-    res <- reactive_analysis()
-    rv$results <- res
+    rv$results <- reactive_analysis()
   })
   
   observeEvent(input$btn_run, {

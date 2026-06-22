@@ -19,8 +19,10 @@ library(DT)
 library(colourpicker)
 library(gtools)
 
-# Functions in R/ are loaded automatically by Shiny via pkgload::load_all()
-# because this directory contains a DESCRIPTION file. No explicit source() needed.
+# shiny.autoload.r = FALSE (set in .Rprofile) disables pkgload::load_all().
+# Load R/ files explicitly so functions are available in the global environment.
+source(file.path("R", "card_functions.R"))
+source(file.path("R", "signatures_genes_card.R"))
 
 # Font and showtext — only activate if the font actually loads.
 # On shinyapps.io showtext_auto() can interfere with ComplexHeatmap's grid device,
@@ -361,7 +363,42 @@ ui <- page_sidebar(
     nav_panel(
       "Results",
       icon = icon("chart-simple"),
-      uiOutput("results_ui", suspendWhenHidden = FALSE)
+      # Dynamic toolbar: comparison picker, downloads, viz options, stat row.
+      # Keeps only lightweight HTML so results_ui re-renders are cheap.
+      uiOutput("results_ui", suspendWhenHidden = FALSE),
+      # Static navset: conditionalPanel uses CSS display:none — DOM containers
+      # always exist, so Shiny output bindings are never destroyed on tab switch.
+      conditionalPanel(
+        condition = "output.results_available",
+        navset_card_underline(
+          id          = "results_content_tabs",
+          full_screen = TRUE,
+          nav_panel(
+            title = "Tabella log2FC",
+            icon  = icon("table"),
+            br(),
+            uiOutput("results_table_or_warn", suspendWhenHidden = FALSE)
+          ),
+          nav_panel(
+            title = "Heatmap Z-score",
+            icon  = icon("map"),
+            br(),
+            plotOutput("ht_zscore_sel", height = "auto")
+          ),
+          nav_panel(
+            title = "Normalised Heatmap",
+            icon  = icon("layer-group"),
+            br(),
+            plotOutput("ht_norm_sel", height = "auto")
+          ),
+          nav_panel(
+            title = "Heatmap Log2FC",
+            icon  = icon("chart-bar"),
+            br(),
+            uiOutput("results_log2fc_warn_or_plot", suspendWhenHidden = FALSE)
+          )
+        )
+      )
     ),
 
     nav_panel(
@@ -1276,36 +1313,7 @@ server <- function(input, output, session) {
         )
       ),
 
-      uiOutput("results_statrow"),
-
-      navset_card_underline(
-        id          = "results_content_tabs",
-        full_screen = TRUE,
-        nav_panel(
-          title = "Tabella log2FC",
-          icon  = icon("table"),
-          br(),
-          uiOutput("results_table_or_warn")
-        ),
-        nav_panel(
-          title = "Heatmap Z-score",
-          icon  = icon("map"),
-          br(),
-          plotOutput("ht_zscore_sel", height = "auto")
-        ),
-        nav_panel(
-          title = "Normalised Heatmap",
-          icon  = icon("layer-group"),
-          br(),
-          plotOutput("ht_norm_sel", height = "auto")
-        ),
-        nav_panel(
-          title = "Heatmap Log2FC",
-          icon  = icon("chart-bar"),
-          br(),
-          uiOutput("results_log2fc_warn_or_plot")
-        )
-      )
+      uiOutput("results_statrow")
     )
   })
   
@@ -1493,12 +1501,22 @@ server <- function(input, output, session) {
     plot_h_px(nrow(r$matrix), r$info$signature_type %||% "all")
   })
 
-  # Prevent Shiny from suspending these outputs when their tab is inactive.
-  # Without this, plots in non-active nav_panels never render on first switch.
-  outputOptions(output, "ht_zscore_sel",  suspendWhenHidden = FALSE)
-  outputOptions(output, "ht_norm_sel",    suspendWhenHidden = FALSE)
-  outputOptions(output, "ht_log2fc_sel",  suspendWhenHidden = FALSE)
-  outputOptions(output, "dt_log2fc_sel",  suspendWhenHidden = FALSE)
+  # Prevent Shiny/bslib from suspending outputs inside dynamic nav_panels.
+  # Both the outer uiOutputs AND the inner plot/table outputs need this.
+  outputOptions(output, "results_table_or_warn",      suspendWhenHidden = FALSE)
+  outputOptions(output, "results_statrow",             suspendWhenHidden = FALSE)
+  outputOptions(output, "col_order_sel_ui",            suspendWhenHidden = FALSE)
+  outputOptions(output, "results_log2fc_warn_or_plot", suspendWhenHidden = FALSE)
+  outputOptions(output, "ht_zscore_sel",               suspendWhenHidden = FALSE)
+  outputOptions(output, "ht_norm_sel",                 suspendWhenHidden = FALSE)
+  outputOptions(output, "ht_log2fc_sel",               suspendWhenHidden = FALSE)
+  outputOptions(output, "dt_log2fc_sel",               suspendWhenHidden = FALSE)
+
+  # Used by conditionalPanel(condition = "output.results_available") in the UI.
+  # Returns TRUE when results exist so the static navset becomes visible.
+  # suspendWhenHidden = FALSE ensures the browser always has the current value.
+  output$results_available <- reactive({ length(rv$results) > 0 })
+  outputOptions(output, "results_available", suspendWhenHidden = FALSE)
 
   output$dl_png_sel <- downloadHandler(
     filename = function() paste0("Heatmap_", input$sel_comp, "_zscore_", Sys.Date(), ".png"),
